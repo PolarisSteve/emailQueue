@@ -15,6 +15,10 @@ namespace emailQueue
 
         //Borrowed structure from https://docs.microsoft.com/en-us/dotnet/api/system.net.mail.smtpclient?view=netframework-4.8
 
+        //Per Microsoft. -> SmtpClient and its network of types are poorly designed, we strongly recommend you use https://github.com/jstedfast/MailKit and https://github.com/jstedfast/MimeKit instead"
+        //This sample uses MimeKit to serialize to a database and MailKit to deserialize and send via SMTP
+
+        //To test this, I used Papercut -> https://github.com/ChangemakerStudios/Papercut
 
         #region "SMTP Client Replacement"
         // The following code will use MailKit and MimeKit together to transmit the mailmessage through a byte array.
@@ -67,6 +71,7 @@ namespace emailQueue
 
     //        using (SmtpClient client = new SmtpClient("localhost"))
     //        {
+
                 // Specify the email sender.
                 // Create a mailing address that includes a UTF8 character
                 // in the display name.
