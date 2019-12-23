@@ -71,6 +71,7 @@ namespace emailQueue
         public static void SendEmail(string To, string From)
         {
 
+    //  Lets not use the current client, replace with code above. 
     //        using (SmtpClient client = new SmtpClient("localhost"))
     //        {
 
