@@ -29,6 +29,8 @@ namespace emailQueue
         public static byte[] AddMessage(MailMessage message)
         {
 
+            //This line is really the most important.
+            //It allows you to take a MailMessage type and coerce it into a MimeMesage which is seralizable. 
             MimeMessage msg = (MimeMessage)message;
             
             using (MemoryStream stream = new MemoryStream())
