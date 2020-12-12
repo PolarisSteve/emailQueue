@@ -30,9 +30,9 @@ namespace emailQueue
         {
 
             //This line is really the most important.
-            //It allows you to take a MailMessage type and coerce it into a MimeMesage which is seralizable. 
+            //It allows you to take a MailMessage type and coerce it into a MimeMesage which is seralizable.
             MimeMessage msg = (MimeMessage)message;
-            
+
             using (MemoryStream stream = new MemoryStream())
             {
                 msg.WriteTo(stream);
@@ -41,7 +41,7 @@ namespace emailQueue
                 //send message through queue
                 return contents;
             }
-            
+
         }
 
 
@@ -71,7 +71,7 @@ namespace emailQueue
         public static void SendEmail(string To, string From)
         {
 
-    //  Lets not use the current client, replace with code above. 
+    //  Lets not use the current client, replace with code above.
     //        using (SmtpClient client = new SmtpClient("localhost"))
     //        {
 
@@ -101,9 +101,9 @@ namespace emailQueue
                 // inTransitMessage represents our ability to queue up and send over wire.
                     var inTransitMessage = AddMessage(message);
                     SendMimeMessage(inTransitMessage);
-                    
-                    
-                    Console.WriteLine("Messgae Sent. Press any  key to exit.");
+
+
+                Console.WriteLine("Message Sent. Press any  key to exit.");
 
                     string answer = Console.ReadLine();
                 }
@@ -111,7 +111,7 @@ namespace emailQueue
             Console.WriteLine("Goodbye.");
 
         }
-    
-    
+
+
     }
 }
