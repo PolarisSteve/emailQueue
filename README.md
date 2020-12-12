@@ -1,0 +1,2 @@
+# emailQueue
+Serializing MailMessage
