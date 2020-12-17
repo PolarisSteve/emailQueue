@@ -1,4 +1,4 @@
-# Serializing MailMessage with MimeKit
+# Serializing MailMessage with MimeKit - Introduction
 
 You may run into a scenario where servers in the DMZ (outside of your domain) need to send emails.
 An example of this maybe a contact page which is open to the public and sends a welcome email.
@@ -8,6 +8,8 @@ In the past many companies would simply allow their DMZ servers to send via SMTP
 In fact, when looking at the documentation for SmtpClient you will see the following warning:
 > We don't recommend that you use the SmtpClient class for new development because SmtpClient doesn't support many modern protocols. Use [MailKit](https://github.com/jstedfast/MailKit) or other libraries instead. For more information, see [SmtpClient shouldn't be used on GitHub](https://github.com/dotnet/platform-compat/blob/master/docs/DE0005.md).
 
+
+# Background
 Recently a customer was upgrading their environments and made the decision to allow the only communication between internal servers and the DMZ be through SQLServer.
 
 
@@ -17,15 +19,19 @@ Although they eventually went with a commercial product ([SMTP2GO](https://SMTP2
 
 There was no going back and as an interim solution, I changed the software we wrote to send the emails through the internal servers using our only open means of communications, our database.
 
+# Solution
 So the very first thing I did was try to serialize the MailMessage object. To me this just made sense however the MailMessage object is not serializable.
 
 When researching this, the typical solutions I came across was sending the MailMessage components (Body,BodyEncoding,Subject,MailAddress etc) separately and then assembling on the destination, or creating your own object with similar properties and extending MailMessage to serialize all the properties on this new object.
 
-Both options while doable were error prone and required more thorough testing than what we were prepared for. Because I knew this code was eventually going to be reverted back to using a commercial SMTP provider I wanted to have as little impact on the code base as possible.
+Both options while doable were error prone and required more thorough testing than what we were prepared for. Because I knew this code was eventually going to be reverted back to using a commercial SMTP provider I wanted to have as little impact on the existing code base as possible.
 
 This is when I discovered [MailKit](https://www.nuget.org/packages/MailKit/) and [MimeKit](https://www.nuget.org/packages/MimeKit/) NuGet packages to do this for me.
 
 Using these packages I was able to modify the existing code without making many architectural changes. In fact I was able to simply replace the call from SmtpClient.Send(MailMessage) with a routine I created to serialize the object and place in a queue (or table) to be processed by another process running as a service worker on an internal machine.
+
+# The Code
+
 ```
 using (SmtpClient client = new SmtpClient("localhost"))
             {
@@ -146,7 +152,7 @@ send the email message and update the database.
 
 
 ```
-
+# Tips and Tricks
 I use [Papercut](https://github.com/ChangemakerStudios/Papercut) 
 to act as my localhost, after the program runs you can inspect the Mail verifying for correctness. Here are some images from my testing.
 
@@ -156,5 +162,8 @@ If your going to poll the database, don't poll too often.
 ![Papercut Message](EmailMsg.jpg)
 ![Papercut Attachment](EmailMsgAttachment.jpg)
 
+
+# Wrapping up
 In general, I found the MailKit and MimeKit packages easy to use and very stable.
-Attached is a sample working sample which demonstrate these concepts.
+The application is a simple console application which clearly shows the concepts presented.
+It does expect two parameters, the to and from email addresses and I have supplied dummy arguments for testing in the command line arguments of the Properties window.

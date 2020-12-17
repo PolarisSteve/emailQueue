@@ -56,12 +56,14 @@ namespace emailQueue
 
                     message.Attachments.Add(inline);
 
+                //************************************************************************************
+                //client.Send(message); Lets not use local SMTP
+                //This is the crux of what we are trying to show, replace smtpClient.send with our own.
+                MimeRoutine.SendMimeMessage(message);
+                //************************************************************************************
 
-                    //client.Send(message); Lets not use local SMTP
-                    MimeRoutine.SendMimeMessage(message);
 
-
-                    Console.WriteLine("Message Sent. Press any  key to exit.");
+                Console.WriteLine("Message Sent. Press any  key to exit.");
 
                     string answer = Console.ReadLine();
                 }

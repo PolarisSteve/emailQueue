@@ -30,7 +30,7 @@ namespace emailQueue
                 using the same code as in MimeMessageSender
             */
 
-            // In the real world the following code would be run in it's own process 
+            // In the real world the following code would be run in it's own process
             // and send the mail
             MimeMessageSender(QueueArray);
 
@@ -47,6 +47,7 @@ namespace emailQueue
         {
             // This line is really the most important.
             // It allows you to take a MailMessage type and coerce it into a MimeMesage which is serializable.
+            // This exists in the DMZ server
             MimeMessage msg = (MimeMessage)message;
             using (MemoryStream stream = new MemoryStream())
             {
@@ -66,6 +67,9 @@ namespace emailQueue
         {
             using (MemoryStream msgstream = new MemoryStream(msg))
             {
+                // This would exist in it's own process using a queue / table to read and update.
+                // on a machine inside your domain.
+
                 MimeMessage msgMime = MimeMessage.Load(msgstream);
                 using (var client = new SmtpClient())
                 {
